@@ -4,6 +4,7 @@ import { Annotation } from "@langchain/langgraph";
 export type IntentType =
     | "product_query" // Hỏi sản phẩm cụ thể (có ID/tên) → Cần SQL
     | "product_browse" // Muốn xem danh sách → Cần getAll
+    | "product_compare" // So sánh sản phẩm → Cần SQL
     | "chitchat" // Chào hỏi, cảm ơn → KHÔNG cần SQL
     | "personal_info" // "Tên tôi là..." → KHÔNG cần SQL, chỉ lưu
     | "memory_recall" // "Tôi đã hỏi gì?" → KHÔNG cần SQL

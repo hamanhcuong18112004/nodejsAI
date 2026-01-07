@@ -36,15 +36,6 @@ export const checkpointer = new RedisSaver(redis);
 /**
  * Hàm kiểm tra kết nối Redis
  */
-export async function testRedisConnection(): Promise<boolean> {
-    try {
-        const result = await redis.ping();
-        return result === "PONG";
-    } catch (error) {
-        console.error("Redis ping failed:", error);
-        return false;
-    }
-}
 
 /**
  * Hàm xóa session của user (nếu cần)

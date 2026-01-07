@@ -2,7 +2,7 @@ import { VectorService } from "./vector.service";
 import MemoryModel from "../../models/ai/memory.schema";
 import { midModel } from "./langgraph/models";
 
-const MAX_HISTORY_ENTRIES = 30; // Giới hạn entries trước khi tóm tắt
+const MAX_HISTORY_ENTRIES = 15; // Giới hạn entries trước khi tóm tắt
 const KEEP_RECENT = 10; // Giữ nguyên 10 entries gần nhất
 
 export class MemoryService {
@@ -79,6 +79,10 @@ TÓM TẮT (2-3 câu):`;
 
         try {
             const response = await midModel.invoke(prompt);
+            console.log(
+                "🔄 [Memory] Summarization response:",
+                response.content
+            );
             return response.content as string;
         } catch (error) {
             console.error("❌ [Memory] Summarization failed:", error);

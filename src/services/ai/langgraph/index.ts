@@ -7,25 +7,32 @@ import {
     memoryNode,
     evaluatorNode,
     saveNode,
+    searchNode,
 } from "./nodes";
 import { checkpointer } from "./checkpointer";
 
 /**
- * Conditional Router - Quyết định có cần query SQL không
+ * Conditional Router - Quyết định node tiếp theo dựa vào intent
  *
  * @param state - Current state
  * @returns Tên node tiếp theo
  */
 function shouldFetchSQL(state: AgentStateType): string {
     const needSQL = ["product_query", "product_browse", "order_check"];
+    const needSearch = ["product_compare"]; // ← Thêm web search cho compare
 
     if (needSQL.includes(state.intent)) {
         console.log("🔀 [Router] → sql_fetch");
         return "sql_fetch";
     }
 
-    console.log("🔀 [Router] → memory_load (skip SQL)");
-    return "memory_load";
+    if (needSearch.includes(state.intent)) {
+        console.log("🔀 [Router] → web_search");
+        return "web_search";
+    }
+
+    console.log("🔀 [Router] → evaluate (skip SQL/Search)");
+    return "evaluate";
 }
 
 /**
@@ -40,26 +47,30 @@ function shouldFetchSQL(state: AgentStateType): string {
  *                                      ↓
  *                                     END
  */
+// File: src/services/ai/langgraph/index.ts
+
 const workflow = new StateGraph(AgentState)
-    // Thêm các nodes
+    .addNode("memory_load", memoryNode) // ← Di chuyển lên đầu
     .addNode("intent_classify", intentNode)
     .addNode("sql_fetch", sqlNode)
-    .addNode("memory_load", memoryNode)
+    .addNode("web_search", searchNode)
     .addNode("evaluate", evaluatorNode)
     .addNode("save_memory", saveNode)
 
-    // Định nghĩa edges
-    .addEdge(START, "intent_classify")
+    // Flow mới
+    .addEdge(START, "memory_load") // ← START → Memory trước
+    .addEdge("memory_load", "intent_classify") // ← Memory → Intent
 
-    // Conditional edge sau intent
+    // Conditional routing (giữ nguyên)
     .addConditionalEdges("intent_classify", shouldFetchSQL, {
         sql_fetch: "sql_fetch",
-        memory_load: "memory_load",
+        web_search: "web_search",
+        evaluate: "evaluate", // ← Chitchat/unknown bỏ qua SQL/Search
     })
 
-    // SQL → Memory → Evaluate → Save → END
-    .addEdge("sql_fetch", "memory_load")
-    .addEdge("memory_load", "evaluate")
+    // Flow tiếp
+    .addEdge("sql_fetch", "evaluate")
+    .addEdge("web_search", "evaluate")
     .addEdge("evaluate", "save_memory")
     .addEdge("save_memory", END);
 

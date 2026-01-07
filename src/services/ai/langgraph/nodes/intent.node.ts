@@ -32,19 +32,24 @@ CÁC LOẠI INTENT:
 2. "product_browse" - Muốn XEM DANH SÁCH sản phẩm
    VD: "Có điện thoại nào?", "Cho tôi xem laptop", "Có gì bán?"
    
-3. "chitchat" - Chào hỏi, cảm ơn, nói chuyện phiếm
+3. "product_compare" - SO SÁNH 2 hoặc nhiều sản phẩm
+   VD: "So sánh iPhone 15 và Samsung S23", "iPhone 15 vs iPhone 16", 
+       "Khác nhau giữa A và B như thế nào?", "Nên chọn X hay Y?"
+   ⚠️ ƯU TIÊN: Nếu có từ "so sánh", "vs", "hay", "khác nhau" → CHỌN product_compare!
+   
+4. "chitchat" - Chào hỏi, cảm ơn, nói chuyện phiếm
    VD: "Chào bạn", "Cảm ơn nhiều", "Tạm biệt"
    
-4. "personal_info" - Chia sẻ hoặc hỏi thông tin CÁ NHÂN
+5. "personal_info" - Chia sẻ hoặc hỏi thông tin CÁ NHÂN
    VD: "Tôi tên Cường", "Tôi thích màu xanh", "Tên tôi là gì?"
    
-5. "memory_recall" - Hỏi về những gì đã nói TRƯỚC ĐÓ
+6. "memory_recall" - Hỏi về những gì đã nói TRƯỚC ĐÓ
    VD: "Tôi đã hỏi gì?", "Bạn nhớ tôi nói gì không?"
    
-6. "order_check" - Kiểm tra đơn hàng, lịch sử mua
+7. "order_check" - Kiểm tra đơn hàng, lịch sử mua
    VD: "Đơn của tôi đến đâu rồi?", "Tôi đã mua gì?"
    
-7. "unknown" - Không thuộc các loại trên
+8. "unknown" - Không thuộc các loại trên
 
 TRẢ VỀ JSON (KHÔNG CÓ MARKDOWN):
 {"intent": "loại_intent", "reasoning": "giải thích ngắn"}`;
